@@ -3,3 +3,7 @@
 secrets/
 *.key
 *.pem
+*.p12
+*.pfx
+*.token
+.claude/settings.local.json
