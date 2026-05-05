@@ -73,7 +73,7 @@ export default function EnglishPage() {
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-4 pb-24">
       <h1 className="text-2xl font-bold">英語学習ログ</h1>
 
       {/* Form */}
@@ -84,38 +84,38 @@ export default function EnglishPage() {
             <label className="text-xs text-gray-400 block mb-1">種類</label>
             <select value={form.activity_type}
               onChange={(e) => setForm({ ...form, activity_type: e.target.value as ActivityType })}
-              className="bg-gray-800 rounded px-3 py-2 text-sm w-full">
+              className="bg-gray-800 rounded px-3 py-2 text-base w-full">
               {ACTIVITIES.map((a) => <option key={a}>{a}</option>)}
             </select>
           </div>
           <div>
             <label className="text-xs text-gray-400 block mb-1">時間（分）</label>
-            <input type="number" min={1} max={480} value={form.duration_minutes}
+            <input type="number" inputMode="numeric" min={1} max={480} value={form.duration_minutes}
               onChange={(e) => setForm({ ...form, duration_minutes: Number(e.target.value) })}
-              className="bg-gray-800 rounded px-3 py-2 text-sm w-full" required />
+              className="bg-gray-800 rounded px-3 py-2 text-base w-full" required />
           </div>
         </div>
         <div>
           <label className="text-xs text-gray-400 block mb-1">スコア（0-100、任意）</label>
-          <input type="number" min={0} max={100} step={0.1}
+          <input type="number" inputMode="decimal" min={0} max={100} step={0.1}
             value={form.score ?? ""}
             onChange={(e) => setForm({ ...form, score: e.target.value ? Number(e.target.value) : undefined })}
-            className="bg-gray-800 rounded px-3 py-2 text-sm w-48" />
+            className="bg-gray-800 rounded px-3 py-2 text-base w-full sm:w-48" />
         </div>
         <textarea placeholder="メモ（任意）" value={form.note ?? ""}
           onChange={(e) => setForm({ ...form, note: e.target.value })}
           maxLength={500} rows={2}
-          className="bg-gray-800 rounded px-3 py-2 text-sm w-full resize-none" />
+          className="bg-gray-800 rounded px-3 py-2 text-base w-full resize-none" />
         {error && <p className="text-red-400 text-sm">{error}</p>}
         <button type="submit" disabled={loading}
-          className="bg-purple-600 hover:bg-purple-500 disabled:opacity-50 px-6 py-2 rounded font-medium text-sm">
+          className="bg-purple-600 hover:bg-purple-500 disabled:opacity-50 px-6 py-2 rounded font-medium text-sm min-h-[48px]">
           {loading ? "保存中..." : "記録"}
         </button>
       </form>
 
       {/* Charts */}
       {barData.length > 0 && (
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="bg-gray-900 rounded-xl p-6">
             <h2 className="font-semibold text-lg mb-4">週次学習時間</h2>
             <ResponsiveContainer width="100%" height={200}>

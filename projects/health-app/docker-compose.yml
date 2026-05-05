@@ -2,13 +2,19 @@ services:
   backend:
     build: ./backend
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     volumes:
       - ./data:/app/data
       - ./backend:/app
     environment:
       - DATABASE_URL=sqlite:///./data/health.db
       - LLM_API_BASE=http://host.docker.internal:1234/v1
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3000}
+      - DEV_MODE=${DEV_MODE:-false}
+      - ALLOWED_EMAIL=${ALLOWED_EMAIL:-}
+    env_file:
+      - path: .env
+        required: false
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
@@ -18,7 +24,15 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:?NEXTAUTH_SECRET must be set in .env}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+      - ALLOWED_EMAIL=${ALLOWED_EMAIL:-}
+    env_file:
+      - path: .env
+        required: false
     depends_on:
       - backend
     restart: unless-stopped

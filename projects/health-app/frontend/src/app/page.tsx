@@ -9,13 +9,13 @@ const CARDS = [
 
 export default function HomePage() {
   return (
-    <div>
+    <div className="p-4 pb-24">
       <h1 className="text-3xl font-bold mb-2">Health Tracker</h1>
       <p className="text-gray-400 mb-8">個人ヘルスデータを一元管理</p>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {CARDS.map(({ href, title, desc, color }) => (
           <Link key={href} href={href}>
-            <div className={`bg-gradient-to-br ${color} rounded-xl p-6 hover:scale-105 transition-transform cursor-pointer`}>
+            <div className={`bg-gradient-to-br ${color} rounded-xl p-6 hover:scale-105 transition-transform cursor-pointer min-h-[80px]`}>
               <h2 className="text-xl font-bold mb-1">{title}</h2>
               <p className="text-sm opacity-80">{desc}</p>
             </div>

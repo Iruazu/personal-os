@@ -43,7 +43,7 @@ export default function NutritionPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-4 pb-24">
       <h1 className="text-2xl font-bold">栄養管理</h1>
 
       {/* Form */}
@@ -54,24 +54,24 @@ export default function NutritionPage() {
           value={form.meal_description}
           onChange={(e) => setForm({ ...form, meal_description: e.target.value })}
           maxLength={1000} required rows={3}
-          className="bg-gray-800 rounded px-3 py-2 text-sm w-full resize-none"
+          className="bg-gray-800 rounded px-3 py-2 text-base w-full resize-none"
         />
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {(["calories", "protein_g", "carbs_g", "fat_g"] as const).map((field) => (
             <div key={field}>
               <label className="text-xs text-gray-400 block mb-1">
                 {{ calories: "カロリー(kcal)", protein_g: "タンパク質(g)", carbs_g: "炭水化物(g)", fat_g: "脂質(g)" }[field]}
               </label>
-              <input type="number" min={0} step={0.1}
+              <input type="number" inputMode="decimal" min={0} step={0.1}
                 value={form[field] ?? ""}
                 onChange={(e) => setForm({ ...form, [field]: e.target.value ? Number(e.target.value) : undefined })}
-                className="bg-gray-800 rounded px-2 py-1 text-sm w-full" />
+                className="bg-gray-800 rounded px-2 py-1 text-base w-full" />
             </div>
           ))}
         </div>
         {error && <p className="text-red-400 text-sm">{error}</p>}
         <button type="submit" disabled={loading}
-          className="bg-orange-600 hover:bg-orange-500 disabled:opacity-50 px-6 py-2 rounded font-medium text-sm">
+          className="bg-orange-600 hover:bg-orange-500 disabled:opacity-50 px-6 py-2 rounded font-medium text-sm min-h-[48px]">
           {loading ? "AI評価中..." : "記録 + LLM評価"}
         </button>
       </form>

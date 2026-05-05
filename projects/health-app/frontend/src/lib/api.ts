@@ -1,9 +1,21 @@
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
+let _authToken: string | undefined;
+export function setAuthToken(token: string | undefined): void {
+  _authToken = token;
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(init?.headers as Record<string, string>),
+  };
+  if (_authToken) {
+    headers["Authorization"] = `Bearer ${_authToken}`;
+  }
   const res = await fetch(`${BASE}${path}`, {
-    headers: { "Content-Type": "application/json", ...init?.headers },
     ...init,
+    headers,
   });
   if (!res.ok) {
     const text = await res.text().catch(() => "");
@@ -49,7 +61,7 @@ export const workoutApi = {
   listSessions: (limit = 50) =>
     request<SessionOut[]>(`/workout/sessions?limit=${limit}`),
   deleteSession: (id: number) =>
-    fetch(`${BASE}/workout/sessions/${id}`, { method: "DELETE" }),
+    request<void>(`/workout/sessions/${id}`, { method: "DELETE" }),
   getVolume: (name: string, limit = 30) =>
     request<VolumePoint[]>(`/workout/volume?exercise_name=${encodeURIComponent(name)}&limit=${limit}`),
   listExerciseNames: () =>
@@ -106,7 +118,7 @@ export const nutritionApi = {
   listLogs: (limit = 50) =>
     request<NutritionOut[]>(`/nutrition/logs?limit=${limit}`),
   deleteLog: (id: number) =>
-    fetch(`${BASE}/nutrition/logs/${id}`, { method: "DELETE" }),
+    request<void>(`/nutrition/logs/${id}`, { method: "DELETE" }),
 };
 
 // ── English ───────────────────────────────────────────────────────────────
@@ -141,7 +153,7 @@ export const englishApi = {
   listLogs: (limit = 50) =>
     request<EnglishOut[]>(`/english/logs?limit=${limit}`),
   deleteLog: (id: number) =>
-    fetch(`${BASE}/english/logs/${id}`, { method: "DELETE" }),
+    request<void>(`/english/logs/${id}`, { method: "DELETE" }),
   weeklyStats: () =>
     request<WeeklyStats[]>("/english/weekly"),
   breakdown: () =>

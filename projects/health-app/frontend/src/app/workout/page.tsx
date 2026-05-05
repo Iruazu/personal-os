@@ -80,46 +80,46 @@ export default function WorkoutPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-4 pb-24">
       <h1 className="text-2xl font-bold">筋トレログ</h1>
 
       {/* Form */}
       <form onSubmit={submit} className="bg-gray-900 rounded-xl p-6 space-y-4">
         <h2 className="font-semibold text-lg">セッション記録</h2>
         <input type="datetime-local" value={date} onChange={(e) => setDate(e.target.value)}
-          className="bg-gray-800 rounded px-3 py-2 text-sm w-full" required />
+          className="bg-gray-800 rounded px-3 py-2 text-base w-full" required />
         <input type="text" placeholder="メモ（任意）" value={note}
           onChange={(e) => setNote(e.target.value)} maxLength={500}
-          className="bg-gray-800 rounded px-3 py-2 text-sm w-full" />
+          className="bg-gray-800 rounded px-3 py-2 text-base w-full" />
 
         <div className="space-y-2">
           {rows.map((row) => (
             <div key={row.key} className="grid grid-cols-5 gap-2 items-center">
               <input type="text" placeholder="種目名" value={row.name}
                 onChange={(e) => updateRow(row.key, "name", e.target.value)}
-                className="bg-gray-800 rounded px-2 py-1 text-sm col-span-2" required />
-              <input type="number" placeholder="セット" value={row.set_number} min={1} max={100}
+                className="bg-gray-800 rounded px-2 py-1 text-base col-span-2" required />
+              <input type="number" inputMode="numeric" placeholder="セット" value={row.set_number} min={1} max={100}
                 onChange={(e) => updateRow(row.key, "set_number", e.target.value)}
-                className="bg-gray-800 rounded px-2 py-1 text-sm" />
-              <input type="number" placeholder="重量(kg)" value={row.weight_kg} min={0} step={0.5}
+                className="bg-gray-800 rounded px-2 py-1 text-base" />
+              <input type="number" inputMode="decimal" placeholder="重量(kg)" value={row.weight_kg} min={0} step={0.5}
                 onChange={(e) => updateRow(row.key, "weight_kg", e.target.value)}
-                className="bg-gray-800 rounded px-2 py-1 text-sm" />
+                className="bg-gray-800 rounded px-2 py-1 text-base" />
               <div className="flex gap-1">
-                <input type="number" placeholder="回数" value={row.reps} min={1}
+                <input type="number" inputMode="numeric" placeholder="回数" value={row.reps} min={1}
                   onChange={(e) => updateRow(row.key, "reps", e.target.value)}
-                  className="bg-gray-800 rounded px-2 py-1 text-sm flex-1" />
+                  className="bg-gray-800 rounded px-2 py-1 text-base flex-1" />
                 <button type="button" onClick={() => removeRow(row.key)}
-                  className="text-red-400 hover:text-red-300 px-1">×</button>
+                  className="text-red-400 hover:text-red-300 px-1 min-h-[48px]">×</button>
               </div>
             </div>
           ))}
           <button type="button" onClick={addRow}
-            className="text-sm text-blue-400 hover:text-blue-300">+ 種目追加</button>
+            className="text-sm text-blue-400 hover:text-blue-300 min-h-[48px]">+ 種目追加</button>
         </div>
 
         {error && <p className="text-red-400 text-sm">{error}</p>}
         <button type="submit" disabled={loading}
-          className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 px-6 py-2 rounded font-medium text-sm">
+          className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 px-6 py-2 rounded font-medium text-sm min-h-[48px]">
           {loading ? "保存中..." : "保存"}
         </button>
       </form>

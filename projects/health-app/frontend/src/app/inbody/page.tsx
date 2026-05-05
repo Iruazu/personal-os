@@ -44,13 +44,13 @@ export default function InBodyPage() {
     }));
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-4 pb-24">
       <h1 className="text-2xl font-bold">InBody</h1>
 
       {/* Upload */}
       <div className="bg-gray-900 rounded-xl p-6">
         <h2 className="font-semibold text-lg mb-4">スキャン画像アップロード</h2>
-        <label className="block w-fit cursor-pointer bg-green-700 hover:bg-green-600 px-5 py-2 rounded text-sm font-medium">
+        <label className="block w-fit cursor-pointer bg-green-700 hover:bg-green-600 px-5 py-2 rounded text-sm font-medium min-h-[48px] flex items-center">
           {uploading ? "OCR処理中..." : "画像を選択"}
           <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp"
             onChange={handleUpload} className="hidden" disabled={uploading} />
