@@ -10,31 +10,34 @@ interface NavTab {
 }
 
 const TABS: NavTab[] = [
-  { href: '/workout', label: '筋トレ', icon: '🏋️' },
-  { href: '/inbody', label: 'InBody', icon: '⚖️' },
-  { href: '/nutrition', label: '栄養', icon: '🥗' },
-  { href: '/english', label: '英語', icon: '📚' },
+  { href: '/',          label: 'ホーム',  icon: '🏠' },
+  { href: '/workout',   label: '筋トレ',  icon: '🏋️' },
+  { href: '/inbody',    label: 'InBody',  icon: '⚖️' },
+  { href: '/nutrition', label: '栄養',    icon: '🥗' },
+  { href: '/english',   label: '英語',    icon: '📚' },
 ];
 
-export default function BottomNav() {
+export function BottomNav() {
   const pathname = usePathname();
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 md:hidden bg-slate-900 border-t border-slate-700"
+      className="glass-nav fixed bottom-0 left-0 right-0 md:hidden border-t"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      aria-label="メインナビゲーション"
     >
       <div className="flex">
         {TABS.map(({ href, label, icon }) => {
-          const isActive = pathname === href;
+          const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href);
           return (
             <Link
               key={href}
               href={href}
-              className={`flex flex-1 flex-col items-center justify-center min-h-[48px] py-2 gap-0.5 transition-colors ${
+              aria-current={isActive ? 'page' : undefined}
+              className={`flex flex-1 flex-col items-center justify-center min-h-[52px] py-2 gap-0.5 transition-colors ${
                 isActive
-                  ? 'text-blue-400'
-                  : 'text-slate-400 hover:text-slate-200 active:text-slate-100'
+                  ? 'text-[#8FAF8F]'
+                  : 'text-slate-500 hover:text-slate-300 active:text-slate-100'
               }`}
             >
               <span className="text-xl leading-none" aria-hidden="true">

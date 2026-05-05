@@ -1,4 +1,4 @@
-const CACHE_NAME = 'health-tracker-v1';
+const CACHE_NAME = 'health-tracker-v5';
 const STATIC_URLS = ['/', '/workout', '/inbody', '/nutrition', '/english'];
 
 self.addEventListener('install', (event) => {
@@ -18,22 +18,18 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+const API_PREFIXES = ['/workout/', '/inbody/', '/nutrition/', '/english/', '/health/', '/api/'];
+
 function isApiRequest(url) {
-  // ポート8000（ローカル開発）またはAPIパスプレフィックス
   return url.port === '8000' ||
-         url.pathname.startsWith('/api/') ||
+         API_PREFIXES.some((p) => url.pathname.startsWith(p)) ||
          (url.hostname.includes('localhost') && url.port !== '');
 }
 
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (isApiRequest(url)) {
-    event.respondWith(fetch(event.request).catch(() => {
-      return new Response(JSON.stringify({ error: 'offline' }), {
-        status: 503,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }));
+    // API requests are not intercepted to avoid iOS Safari SW + Authorization header issues
     return;
   }
   event.respondWith(

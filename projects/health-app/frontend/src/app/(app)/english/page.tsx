@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
+import { useSession } from "next-auth/react";
 import { englishApi, EnglishOut, EnglishIn, ActivityType, WeeklyStats, ActivityBreakdown } from "@/lib/api";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -8,18 +9,21 @@ import {
 
 const ACTIVITIES: ActivityType[] = ["speak", "reading", "listening", "writing"];
 const COLORS: Record<ActivityType, string> = {
-  speak: "#a855f7",
-  reading: "#3b82f6",
-  listening: "#22c55e",
-  writing: "#f97316",
+  speak: "#9B8EC4",
+  reading: "#6B8CAE",
+  listening: "#8FAF8F",
+  writing: "#C4785A",
 };
 
 export default function EnglishPage() {
+  const { status } = useSession();
   const [logs, setLogs] = useState<EnglishOut[]>([]);
   const [weekly, setWeekly] = useState<WeeklyStats[]>([]);
   const [breakdown, setBreakdown] = useState<ActivityBreakdown[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fetching, setFetching] = useState(true);
+  const [pendingDelete, setPendingDelete] = useState<number | null>(null);
 
   const [form, setForm] = useState<EnglishIn>({
     activity_type: "speak",
@@ -29,17 +33,25 @@ export default function EnglishPage() {
   });
 
   const refresh = useCallback(async () => {
-    const [l, w, b] = await Promise.all([
-      englishApi.listLogs(),
-      englishApi.weeklyStats(),
-      englishApi.breakdown(),
-    ]);
-    setLogs(l);
-    setWeekly(w);
-    setBreakdown(b);
+    setFetching(true);
+    setPendingDelete(null);
+    try {
+      const [l, w, b] = await Promise.all([
+        englishApi.listLogs(),
+        englishApi.weeklyStats(),
+        englishApi.breakdown(),
+      ]);
+      setLogs(l);
+      setWeekly(w);
+      setBreakdown(b);
+    } finally {
+      setFetching(false);
+    }
   }, []);
 
-  useEffect(() => { refresh(); }, [refresh]);
+  useEffect(() => {
+    if (status === "authenticated") refresh();
+  }, [status, refresh]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,18 +85,18 @@ export default function EnglishPage() {
   });
 
   return (
-    <div className="space-y-8 p-4 pb-24">
+    <div className="space-y-8">
       <h1 className="text-2xl font-bold">英語学習ログ</h1>
 
       {/* Form */}
-      <form onSubmit={submit} className="bg-gray-900 rounded-xl p-6 space-y-4">
+      <form onSubmit={submit} className="glass-card p-6 space-y-4">
         <h2 className="font-semibold text-lg">セッション記録</h2>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="text-xs text-gray-400 block mb-1">種類</label>
             <select value={form.activity_type}
               onChange={(e) => setForm({ ...form, activity_type: e.target.value as ActivityType })}
-              className="bg-gray-800 rounded px-3 py-2 text-base w-full">
+              className="w-full">
               {ACTIVITIES.map((a) => <option key={a}>{a}</option>)}
             </select>
           </div>
@@ -92,7 +104,7 @@ export default function EnglishPage() {
             <label className="text-xs text-gray-400 block mb-1">時間（分）</label>
             <input type="number" inputMode="numeric" min={1} max={480} value={form.duration_minutes}
               onChange={(e) => setForm({ ...form, duration_minutes: Number(e.target.value) })}
-              className="bg-gray-800 rounded px-3 py-2 text-base w-full" required />
+              className="w-full" required />
           </div>
         </div>
         <div>
@@ -100,15 +112,15 @@ export default function EnglishPage() {
           <input type="number" inputMode="decimal" min={0} max={100} step={0.1}
             value={form.score ?? ""}
             onChange={(e) => setForm({ ...form, score: e.target.value ? Number(e.target.value) : undefined })}
-            className="bg-gray-800 rounded px-3 py-2 text-base w-full sm:w-48" />
+            className="w-full sm:w-48" />
         </div>
         <textarea placeholder="メモ（任意）" value={form.note ?? ""}
           onChange={(e) => setForm({ ...form, note: e.target.value })}
           maxLength={500} rows={2}
-          className="bg-gray-800 rounded px-3 py-2 text-base w-full resize-none" />
+          className="w-full resize-none" />
         {error && <p className="text-red-400 text-sm">{error}</p>}
         <button type="submit" disabled={loading}
-          className="bg-purple-600 hover:bg-purple-500 disabled:opacity-50 px-6 py-2 rounded font-medium text-sm min-h-[48px]">
+          className="bg-[#9B8EC4] hover:bg-[#AB9ED4] disabled:opacity-50 px-6 py-2 rounded-xl font-medium text-sm min-h-[48px]">
           {loading ? "保存中..." : "記録"}
         </button>
       </form>
@@ -116,14 +128,14 @@ export default function EnglishPage() {
       {/* Charts */}
       {barData.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-gray-900 rounded-xl p-6">
+          <div className="glass-card p-6">
             <h2 className="font-semibold text-lg mb-4">週次学習時間</h2>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={barData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="week" tick={{ fontSize: 10, fill: "#9ca3af" }} />
-                <YAxis tick={{ fontSize: 11, fill: "#9ca3af" }} unit="分" />
-                <Tooltip contentStyle={{ backgroundColor: "#1f2937", border: "none" }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
+                <XAxis dataKey="week" tick={{ fontSize: 10, fill: "#6b7280" }} />
+                <YAxis tick={{ fontSize: 11, fill: "#6b7280" }} unit="分" />
+                <Tooltip contentStyle={{ backgroundColor: "rgba(18,18,18,0.92)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px" }} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
                 {ACTIVITIES.map((act) => (
                   <Bar key={act} dataKey={act} stackId="a" fill={COLORS[act]} />
@@ -131,7 +143,7 @@ export default function EnglishPage() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div className="bg-gray-900 rounded-xl p-6">
+          <div className="glass-card p-6">
             <h2 className="font-semibold text-lg mb-4">種類別割合</h2>
             {breakdown.length === 0 ? (
               <p className="text-gray-500 text-sm">データなし</p>
@@ -144,7 +156,7 @@ export default function EnglishPage() {
                         <Cell key={entry.activity_type} fill={COLORS[entry.activity_type as ActivityType] ?? "#6b7280"} />
                       ))}
                     </Pie>
-                    <Tooltip contentStyle={{ backgroundColor: "#1f2937", border: "none" }} />
+                    <Tooltip contentStyle={{ backgroundColor: "rgba(18,18,18,0.92)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px" }} />
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="flex flex-wrap gap-2 mt-2">
@@ -163,14 +175,18 @@ export default function EnglishPage() {
       )}
 
       {/* Logs */}
-      <div className="bg-gray-900 rounded-xl p-6">
+      <div className="glass-card p-6">
         <h2 className="font-semibold text-lg mb-4">ログ</h2>
-        {logs.length === 0 ? (
+        {fetching ? (
+          <div className="flex justify-center py-8">
+            <div className="w-6 h-6 border-2 border-[#9B8EC4] border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : logs.length === 0 ? (
           <p className="text-gray-500 text-sm">記録なし</p>
         ) : (
           <div className="space-y-2">
             {logs.map((log) => (
-              <div key={log.id} className="bg-gray-800 rounded-lg px-4 py-3 flex justify-between items-center">
+              <div key={log.id} className="glass-inner px-4 py-3 flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <span className="text-xs font-medium px-2 py-0.5 rounded-full"
                     style={{ backgroundColor: COLORS[log.activity_type as ActivityType] + "33", color: COLORS[log.activity_type as ActivityType] }}>
@@ -182,8 +198,18 @@ export default function EnglishPage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-xs text-gray-400">{new Date(log.logged_at).toLocaleDateString("ja-JP")}</span>
-                  <button onClick={() => deleteLog(log.id)}
-                    className="text-xs text-red-400 hover:text-red-300">削除</button>
+                  {pendingDelete === log.id ? (
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-slate-400">削除しますか？</span>
+                      <button onClick={() => { deleteLog(log.id); setPendingDelete(null); }}
+                        className="text-xs text-[#C4785A] hover:text-[#D4886A] font-medium">はい</button>
+                      <button onClick={() => setPendingDelete(null)}
+                        className="text-xs text-slate-400 hover:text-slate-200">いいえ</button>
+                    </div>
+                  ) : (
+                    <button onClick={() => setPendingDelete(log.id)}
+                      className="text-xs text-slate-500 hover:text-[#C4785A] transition-colors">削除</button>
+                  )}
                 </div>
               </div>
             ))}
