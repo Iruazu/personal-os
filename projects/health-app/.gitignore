@@ -5,3 +5,5 @@ frontend/.next/
 __pycache__/
 *.pyc
 .env
+nginx/certs/*.crt
+nginx/certs/*.key
