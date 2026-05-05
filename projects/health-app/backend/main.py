@@ -41,7 +41,9 @@ async def verify_jwt(request: Request, call_next):
     dev_mode = os.environ.get("DEV_MODE", "false").lower() == "true"
     allowed_email = os.environ.get("ALLOWED_EMAIL", "")
 
-    # Skip auth for health endpoint
+    # Skip auth for health endpoint and CORS preflight
+    if request.method == "OPTIONS":
+        return await call_next(request)
     if request.url.path == "/health" or request.url.path.startswith("/api/auth"):
         return await call_next(request)
 

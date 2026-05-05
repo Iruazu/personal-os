@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Link from "next/link";
 import { Providers } from "@/components/Providers";
@@ -10,13 +10,16 @@ import { AuthSync } from "@/components/AuthSync";
 export const metadata: Metadata = {
   title: "Health Tracker",
   description: "Personal health tracking app",
-  themeColor: "#0f172a",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "Health Tracker",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0f172a",
 };
 
 const NAV = [

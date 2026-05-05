@@ -5,6 +5,8 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npm run build
+RUN npm run build && \
+    cp -r .next/static .next/standalone/.next/static && \
+    cp -r public .next/standalone/public
 
-CMD ["npm", "start"]
+CMD ["node", ".next/standalone/server.js"]
