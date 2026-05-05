@@ -7,7 +7,7 @@ export function setAuthToken(token: string | undefined): void {
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+    ...(init?.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
     ...(init?.headers as Record<string, string>),
   };
   if (_authToken) {
@@ -20,6 +20,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (!res.ok) {
     const text = await res.text().catch(() => "");
     throw new Error(`${res.status} ${res.statusText}: ${text}`);
+  }
+  if (res.status === 204 || res.headers.get("content-length") === "0") {
+    return undefined as T;
   }
   return res.json() as Promise<T>;
 }
@@ -88,13 +91,14 @@ export const inBodyApi = {
     return request<InBodyOut>("/inbody/upload", {
       method: "POST",
       body: form,
-      headers: {},
     });
   },
   listRecords: (limit = 50) =>
     request<InBodyOut[]>(`/inbody/records?limit=${limit}`),
   patchRecord: (id: number, body: Partial<InBodyOut>) =>
     request<InBodyOut>(`/inbody/records/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
+  deleteRecord: (id: number) =>
+    request<void>(`/inbody/records/${id}`, { method: "DELETE" }),
 };
 
 // ── Nutrition ─────────────────────────────────────────────────────────────

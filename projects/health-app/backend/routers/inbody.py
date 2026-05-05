@@ -86,3 +86,12 @@ def patch_record(record_id: int, body: InBodyPatch, db: Session = Depends(get_db
     db.commit()
     db.refresh(record)
     return record
+
+
+@router.delete("/records/{record_id}", status_code=204)
+def delete_record(record_id: int, db: Session = Depends(get_db)):
+    record = db.get(InBodyRecord, record_id)
+    if not record:
+        raise HTTPException(status_code=404, detail="Record not found")
+    db.delete(record)
+    db.commit()
