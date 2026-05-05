@@ -5,6 +5,22 @@
     "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50"
   },
   "permissions": {
+    "allow": [
+      "Write(**)",
+      "Edit(**)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(python3:*)",
+      "Bash(docker:*)",
+      "Bash(npm:*)",
+      "Bash(pip:*)"
+    ],
     "deny": [
       "Read(**/.env)",
       "Read(**/.ssh/**)",
