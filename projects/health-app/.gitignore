@@ -1,0 +1,7 @@
+data/health.db
+data/images/
+frontend/node_modules/
+frontend/.next/
+__pycache__/
+*.pyc
+.env

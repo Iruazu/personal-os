@@ -4,6 +4,12 @@
 - 新プロジェクト（melchior / synapse / freesia / BIM のいずれか）でPR継続的に出す
 - ML実装への貢献（理解と実装を両立）
 - sim2real / Code as Policy の理解を深め、独立して実装できる水準へ
+- Unitree Go2 地磁気センサ統合タスクの完遂
+
+## 夏インターン
+- Bosch Japan（または同レベルの企業）の有給インターンに応募・参加
+- ポートフォリオ（GitHub + 技術記事 + LinkedIn）を選考前に整備
+- 夏インターンの成果を就活本番につなげるストーリー設計
 
 ## アルゴリズム・競技プログラミング
 - LeetCode: Easy全完 → Medium 50問以上
@@ -17,9 +23,11 @@
 - AWS SAA（Solutions Architect Associate）取得
 - AWSサービスをハンズオンで触り、アーキテクチャ設計の基礎を習得
 
-## アウトプット
+## アウトプット・ブランディング
 - GitHubに継続的なコミット実績を積む
-- 学習ログ・振り返りをpersonal-osに蓄積し、自己認識を高める
+- LinkedIn定期更新（インターン成果・技術投稿、月1以上）
+- 技術記事執筆を開始（Zenn or Qiita、年2〜3本）
+- 学習ログ・振り返りをpersonal-osに蓄積
 
 ## 健康・習慣
 - 筋トレ週3以上を年間通じて継続
